@@ -1,24 +1,21 @@
 # Online-NgSpice-Simulator
 This repositry contains code for Online NgSpice Simulator
 
-##Pre-requisites
-1. Node.js 
-2. Ngspice
+## Run using Docker
 
+    docker-compose up --build
 
-##How to run ?
+Open browser and go to http://localhost:3000
 
-0. To install all the dependency
+## How to run ?
 
-    `npm install`
+    sudo aptitude install ngspice node.js
+    npm install
+    node app.js
 
-1. To run the application
+Open browser and go to http://localhost:3000
 
-    `node app.js`
-
-2. Open browser and go to http://localhost:3000
-
-##Environment variable
+## Environment variables
 
 ####For test server
     `export NODE_ENV="testing"`
@@ -30,3 +27,6 @@ This repositry contains code for Online NgSpice Simulator
     `export NODE_ENV="production"`
 
 
+## Changes
+
+Fixed the routes to use a common function for the path for plot output.

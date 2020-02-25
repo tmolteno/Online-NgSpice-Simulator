@@ -1,3 +1,7 @@
+function getTempPlotFile(skt_id) {
+    var plot_allv_file = '/tmp/plot_allv_'+skt_id.toLowerCase()+'.txt'
+    return plot_allv_file;
+}
 module.exports = function(express,app,fs,os,io,PythonShell,scriptPath){	
 	console.log("Server started!!! ");	
 
@@ -27,7 +31,7 @@ module.exports = function(express,app,fs,os,io,PythonShell,scriptPath){
 
 	io.on('connection', function (socket) {
 		socketID = getSocketID(socket);
-		var plot_allv_file = '/tmp/plot_allv_'+socketID.toLowerCase()+'.txt'
+		var plot_allv_file = getTempPlotFile(socketID); // '/tmp/plot_allv_'+socketID.toLowerCase()+'.txt'
 		var fileName = '/tmp/'+socketID+'.cir.out';
   		socket.emit('loadingPage', 'User with socket ID '+socket.id+' is Connected');
   		
@@ -40,7 +44,7 @@ module.exports = function(express,app,fs,os,io,PythonShell,scriptPath){
   			
   			//Plotting List
   			plotList = data['plotList'];
-  			// console.log("PlotList----------->"+plotList);
+  			console.log("PlotList----------->"+plotList);
 		
 			plotOption = plotList.join(" "); //Space is required between two plot
 
@@ -77,9 +81,9 @@ module.exports = function(express,app,fs,os,io,PythonShell,scriptPath){
 			});
 
 			fs.exists(plot_allv_file, function(exists) {
-				// console.log("Check Plot allv "+plot_allv_file)
+				console.log("Deleting Plot allv "+plot_allv_file)
 				if (exists) {
-					console.log("Check Plot allv files")
+					console.log("Deleting Plot allv files")
 					//Deleting plot allv file
 					deleteNetlistFile(plot_allv_file);
 				}
@@ -91,9 +95,10 @@ module.exports = function(express,app,fs,os,io,PythonShell,scriptPath){
 
 		function addPlotDetails(fileName,plotOption)
 		{
-			
+			console.log("addPlotDetails " + plotOption);
 			//Adding Plot component in a file
-			sed('-i', 'run', 'run \n print '+plotOption+' > /tmp/plot_allv_'+socketID+'.txt \n' , fileName);
+            var plt_file = getTempPlotFile(socketID);
+			sed('-i', 'run', 'run \n print '+plotOption+' > ' + plt_file + ' \n' , fileName);
 
 		}
 
