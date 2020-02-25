@@ -62,7 +62,7 @@ module.exports = function(express,app,fs,os,io,PythonShell,scriptPath){
   				fs.exists(fileName, function(exists) {
     				if (exists) {
       					addPlotDetails(fileName,plotOption);
-      					executeNgspiceNetlist(fileName);
+      					executeNgspiceNetlist(fileName, plotOption);
       					
     				}
   					});
@@ -93,16 +93,17 @@ module.exports = function(express,app,fs,os,io,PythonShell,scriptPath){
 
 		});
 
-		function addPlotDetails(fileName,plotOption)
+		function addPlotDetails(fileName, plotOption)
 		{
-			console.log("addPlotDetails " + plotOption);
-			//Adding Plot component in a file
-            var plt_file = getTempPlotFile(socketID);
-			sed('-i', 'run', 'run \n print '+plotOption+' > ' + plt_file + ' \n' , fileName);
-
+			if (plotOption.trim().length > 0) {
+                console.log("addPlotDetails " + plotOption);
+                //Adding Plot component in a file
+                var plt_file = getTempPlotFile(socketID);
+                sed('-i', 'run', 'run \n print '+plotOption+' > ' + plt_file + ' \n' , fileName);
+            }
 		}
 
-		function executeNgspiceNetlist(fileName)
+		function executeNgspiceNetlist(fileName, plotOption)
 		{
 			fs.exists(fileName, function(exists) {
 				if (exists) {
@@ -110,6 +111,8 @@ module.exports = function(express,app,fs,os,io,PythonShell,scriptPath){
   					console.log('Exit code:', code);
   					console.log('Program output:', stdout);
   					console.log('Program stderr:', stderr);
+	  				
+                    socket.emit('serverMessage',{"stderr":stderr,"stdout":stdout});
 
 	  				if(stderr){
 	  					switch(stderr){
@@ -120,13 +123,13 @@ module.exports = function(express,app,fs,os,io,PythonShell,scriptPath){
 	  								
 	  							break;
 	  						default:
-	  							parsePlotData()
+	  							parsePlotData(plotOption)
 	  							break;
 	  					}
 	  					
 	  				}
 	  				else{
-	  					parsePlotData()
+	  					parsePlotData(plotOption)
 	  				}
 					
 					});
@@ -135,8 +138,12 @@ module.exports = function(express,app,fs,os,io,PythonShell,scriptPath){
 				
 		}
 
-		function parsePlotData(){
-			console.log("Ngspice netlist executed successfully "+fileName);
+		function parsePlotData(plotOption){
+			console.log("plotOption----------->"+plotOption);
+			if (plotOption.trim().length < 5) 
+                return;
+            
+            console.log("Ngspice netlist executed successfully "+fileName);
 			console.log("PlotList----------->"+plotList);
 			//socket.emit('serverMessage','Ngspice netlist executed successfully: ');	
 			//var analysisInfo = grep('.tran|.dc|.ac', fileName); //Not reliable

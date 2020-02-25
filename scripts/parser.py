@@ -24,6 +24,7 @@ class DataExtraction:
 
         except Exception as e:
             print "Exception Message : ",str(e)
+            self.allv = None
 
         for line in self.allv[3].split(" "):
             if len(line):

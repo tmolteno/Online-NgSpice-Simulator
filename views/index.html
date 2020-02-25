@@ -48,7 +48,7 @@ v1  in gnd pwl(0m 0 0.5m 5 50m 5 50.5m 0 100m 0)
 .endc
 .end
 		      			</textarea>
-		      			<h3>Plots:</h3>
+		      			<h3>Plots: (requires control block)</h3>
 		      			<textarea class="form-control" id="plotOption" rows="3">
 v(in) v(out)      			
     					</textarea>
@@ -168,8 +168,8 @@ v(in) v(out)
 		});
 
 		socket.on("serverMessage", function(message) {
-			// console.log("RECEIVED : " + message);
-			messages.innerHTML = "<br>" + message.stdout + "<br>"+message.stderr;
+			console.log("RECEIVED : " + message);
+			messages.innerHTML = "<pre>" + message.stdout + "</pre>" + "<br><br>" +  "<pre>" +message.stderr + "</pre>";
 			
 		});
 
