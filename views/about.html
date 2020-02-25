@@ -18,7 +18,25 @@
 			<p>
 				The FOSSEE project is part of the National Mission on Education through Information and Communication Technology (ICT), Ministry of Human Resources and Development, Government of India.
 			</p>	
+			<p>
+				This system is modified by the Department of Physics, University of Otago, Dunedin, New Zealand, to:
+				<ul>
+				<li>allow simulations without plots</li>
+				<li>Print the text output</li>
+				<li>Containerized using Docker</li>
+				<li>Fix bugs in temporary file names on case-sensitive filesystems.</li>
+				</ul>
+			</p>	
 		</section>	
+		
+		<section> <h2>Plotting</h2> <p> Add the following code just before the .end, to get plotting to work </p>
+<pre>
+.control
+	run
+.endc
+</pre>
+
+		</section>
 	</div>
 	</div>
 	</div>
