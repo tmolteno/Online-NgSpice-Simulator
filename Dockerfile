@@ -8,12 +8,13 @@ ARG DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update -y &&  apt-get install -y \
     nodejs \
-    npm
-
-RUN apt-get install -y ngspice
+    npm \
+    ngspice
     
-# RUN apt-get clean -y
-# RUN rm -rf /var/lib/apt/lists/*
+RUN apt-get clean -y
+RUN rm -rf /var/lib/apt/lists/*
+
+RUN npm install npm@latest -g
 
 # Create app directory
 WORKDIR /usr/src/app
